@@ -29,6 +29,12 @@ class CountriesAndCapitalsViewController: UIViewController {
         bind(to: viewModel)
     }
     
+    override func viewDidDisappear(_ animated: Bool) {
+        viewModel.countries.remove(observer: self)
+        viewModel.error.remove(observer: self)
+        super.viewDidDisappear(animated)
+    }
+    
     //MARK:- ViewModel Helper
     
     private func bind(to viewModel: CountriesAndCapitalViewModel) {
@@ -36,7 +42,10 @@ class CountriesAndCapitalsViewController: UIViewController {
             guard let self = self else { return }
             DispatchQueue.main.async { self.updateData(with: countries) }
         }
-    
+        
+        viewModel.error.observe(on: self) { error in
+            print(error)
+        }
     }
     
 }
